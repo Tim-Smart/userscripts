@@ -3,6 +3,8 @@
 // @namespace      http://userscripts.org/users/tim
 // @include        http://*youtube.com/watch*
 // @include        https://*youtube.com/watch*
+// @match          http://*.youtube.com/watch*
+// @match          https://*.youtube.com/watch*
 // @require        http://updater.usotools.co.cc/50003.js
 // @author         Tim Smart
 // @copyright      2009 Tim Smart; 2011 gw111zz
