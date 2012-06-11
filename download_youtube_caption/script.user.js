@@ -108,13 +108,14 @@ function loadCaptions (select) {
     method: 'GET',
     url:    'http://video.google.com/timedtext?hl=en&v=' + VIDEO_ID + '&type=list',
     onload: function( xhr ) {
-      if (xhr.responseText === "") {
-        return select.options[0].textContent = 'No captions.';
-      }
 
       var caption, option, caption_info,
           captions = new DOMParser().parseFromString(xhr.responseText, "text/xml").
                                      getElementsByTagName('track');
+                                
+      if (captions.length === 0) {
+        return select.options[0].textContent = 'No captions.';
+      }
 
       for (var i = 0, il = captions.length; i < il; i++) {
         caption      = captions[i];
