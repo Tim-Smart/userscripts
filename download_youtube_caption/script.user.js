@@ -3,17 +3,19 @@
 // @namespace      http://userscripts.org/users/tim
 // @include        http://*youtube.com/watch*
 // @include        https://*youtube.com/watch*
-// @author         Tim Smart
+// @Original Author  Tim Smart(https://github.com/tim-smart)
+// @Modified by      1c7(https://github.com/1c7)
 // @copyright      2009 Tim Smart; 2011 gw111zz
 // @license        GNU GPL v3.0 or later. http://www.gnu.org/copyleft/gpl.html
+
 // ==/UserScript==
 
 var PLAYER              = unsafeWindow.document.getElementById('movie_player'),
     VIDEO_ID            = unsafeWindow.yt.getConfig('VIDEO_ID'),
     TITLE               = unsafeWindow.ytplayer.config.args.title,
-    FORMATS             = {srt: '.srt', text: 'text'},
-    FORMAT_SELECTOR_ID  = 'format_selector',
     caption_array = [];
+
+
 
 var makeTimeline = function (time) {
   var string,
@@ -39,6 +41,9 @@ var makeTimeline = function (time) {
   return time_array.join(":") + "," + milliseconds;
 }
 
+
+
+// 下载字幕用的函数.
 function loadCaption (selector) {
   var caption = caption_array[selector.selectedIndex - 1];
 
@@ -53,7 +58,6 @@ function loadCaption (selector) {
         var caption, previous_start, start, end,
             captions      = new DOMParser().parseFromString(xhr.responseText, "text/xml").getElementsByTagName('text'),
             textarea      = document.createElement("textarea"),
-            output_format = FORMATS[document.getElementById(FORMAT_SELECTOR_ID).value] || FORMATS['srt'],
             srt_output    = ''; 
 
         for (var i = 0, il = captions.length; i < il; i++) {
@@ -63,12 +67,10 @@ function loadCaption (selector) {
           if (0 <= previous_start) {
             textarea.innerHTML = captions[i - 1].textContent.replace(/</g, "&lt;").
                                                              replace( />/g, "&gt;" );
-            if (output_format === FORMATS['text']) {
-              srt_output += textarea.value + "\n";
-            } else {
-              srt_output += (i + 1) + "\n" + makeTimeline(previous_start) + ' --> ' +
+
+            srt_output += (i + 1) + "\n" + makeTimeline(previous_start) + ' --> ' +
                             makeTimeline(start) + "\n" + textarea.value + "\n\n";
-            }
+            
             previous_start = null;
           }
 
@@ -83,17 +85,56 @@ function loadCaption (selector) {
           }
 
           textarea.innerHTML = caption.textContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-          if (output_format === FORMATS['text']) {  
-            srt_output += textarea.value + "\n";
-          } else {
+
             srt_output   += (i + 1) + "\n" + makeTimeline(start) + ' --> ' +
                                 makeTimeline(end) + "\n" + textarea.value + "\n\n";
-          }
+          
         }
 
         textarea = null;
 
-        GM_openInTab("data:text/plain;charset=utf-8," + encodeURIComponent(srt_output));
+
+          
+          // ----------------------------------------------------------------
+          var a = document.createElement('a');
+          // create <a> tag
+          
+          a.style.cssText = 'display:none;';  
+          // set not display
+          
+          a.setAttribute("id", "ForSubtitleDownload");
+          // set id
+          
+          a.setAttribute("download", TITLE + '.srt');
+          // set download file name.. don't ask me why this work... i don't know too...
+          
+          a.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(srt_output));
+          // set href
+          
+          var body = document.getElementsByTagName('body')[0];
+          // get <body> tag
+          
+          body.appendChild(a);
+          // append the <a> tag into <body>
+          
+          
+          var for_download_a_tag = document.getElementById('ForSubtitleDownload');
+          // get the <a> tag
+          
+          
+          
+          // http://stackoverflow.com/questions/7914684/trigger-right-click-using-pure-javascript
+          if (document.createEvent) {
+                var ev = document.createEvent('HTMLEvents');
+                ev.initEvent('click', true, false);
+                for_download_a_tag.dispatchEvent(ev);
+          }
+          // fire click event.
+          
+          
+          // ----------------------------------------------------------------
+          
+          
       } else {
         alert("Error: No response from server.");
       }
@@ -104,7 +145,10 @@ function loadCaption (selector) {
   });
 }
 
+
+// 载入字幕有多少种语言的函数, 然后加到那个选项框里
 function loadCaptions (select) {
+    
   GM_xmlhttpRequest({
     method: 'GET',
     url:    'http://video.google.com/timedtext?hl=en&v=' + VIDEO_ID + '&type=list',
@@ -139,26 +183,16 @@ function loadCaptions (select) {
   });
 }
 
-function loadFormats (select) {
-  var type
 
-  for (type in FORMATS) {
-    option             = document.createElement('option');
-    option.value       = type;
-    option.textContent = FORMATS[type];
-
-    select.appendChild(option);
-  }
-
-  select.options[0].textContent = 'Select caption format.';
-  select.disabled               = false;
-}
 
 (function () {
+    
   var div      = document.createElement('div'),
       select   = document.createElement('select'),
       option   = document.createElement('option'),
       controls = document.getElementById('watch7-headline');
+  // 创建3个元素.
+  // controls = 拿装视频标题的div
 
   div.setAttribute( 'style', 'display: inline-block;' );
 
@@ -169,33 +203,22 @@ function loadFormats (select) {
   option.selected    = true;
 
   select.appendChild(option);
+  // 添加这个选项, 这个选项默认被选中, 文字是"Loading..."  
+    
   select.addEventListener('change', function() {
-    loadCaption(this);
+      loadCaption(this);
   }, false);
-
+   // 事件侦听.
+    
   div.appendChild(select);
+  // 往新建的div里面放入select
 
-
-  var format_div       = document.createElement('div'),
-      format_select    = document.createElement('select'),
-      format_option    = document.createElement('option');
-
-  format_div.setAttribute('style', 'display: inline-block;');
-
-  format_select.id         = FORMAT_SELECTOR_ID;
-  format_select.disabled   = true;
-
-  format_option.textContent    = 'Loading...';
-  format_option.selected       = true;
-
-  format_select.appendChild(format_option);
-
-  format_div.appendChild(format_select);
-
-  controls.appendChild(format_div);
   controls.appendChild(div);
-
-  loadFormats(format_select);
+    // 往页面上添加这个div
+  
   loadCaptions(select);
+  // 这个是用来载入有多少字幕的函数, 不是下载字幕的函数
+    
+    
 })();
 
