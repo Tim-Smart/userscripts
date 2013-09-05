@@ -82,4 +82,4 @@ removeComments()
 
 })();
 
-/* vim: set noexpandtab sts=0 ts=8 sw=8 tw=80 :*/
+/* vim: set expandtab sts=2 ts=2 sw=2 tw=80 ft=javascript :*/
