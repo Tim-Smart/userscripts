@@ -34,58 +34,49 @@
 ;(function () {
 
 // For multiple environments.
-var unsafe 		= unsafeWindow || window
+var unsafe    = unsafeWindow || window
 // Find a MutationObserver constructor.
-var MutationObserver	= unsafe.MutationObserver
+var MutationObserver  = unsafe.MutationObserver
 
 if (!MutationObserver && unsafe.WebKitMutationObserver) {
-	MutationObserver = unsafe.WebKitMutationObserver
+  MutationObserver = unsafe.WebKitMutationObserver
 }
 
 // ====
 // Remove comments when found
 
 function removeComments () {
-	var canvas	= null // XPathResult
-	var divs	= null // XPathResult (Comment toggles)
-	var commentform	= null // XPathResult (Comment box)
-	var element	= null // DomElement
+  var commentBubbles      = document.querySelectorAll('div.commentBubble')
+  var commentPlaceholders = document.querySelectorAll('div.commentPlaceholder')
+  var commentForms        = document.querySelectorAll('div.commentForm')
+  var wrappers            = document.querySelectorAll('div.waveform__scene')
+  var canvases            = null
+  var element             = null
 
-	canvas		= document.evaluate(
-	  './/canvas[contains(@class, "waveformCommentsCanvas")]/..'
-	, document
-	, null
-	, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
-	, null
-	)
+  for (var i = 0, il = commentBubbles.length; i < il; i++) {
+    element = commentBubbles[i]
+    element.parentNode.removeChild(element)
+  }
+  for (var i = 0, il = commentPlaceholders.length; i < il; i++) {
+    element = commentPlaceholders[i]
+    element.parentNode.removeChild(element)
+  }
+  for (var i = 0, il = commentForms.length; i < il; i++) {
+    element = commentForms[i]
+    element.parentNode.removeChild(element)
+  }
+  for (var i = 0, il = wrappers.length; i < il; i++) {
+    element  = wrappers[i]
+    canvases = element.querySelectorAll('canvas')
 
-	divs		= document.evaluate(
-	  './/div[contains(@class, "waveformComments")]/..'
-	, document
-	, null
-	, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
-	, null
-	)
-
-	commentforms	= document.querySelectorAll('div.sound__comments')
-
-	for (var i = 0, il = canvas.snapshotLength; i < il; i++) {
-		element = canvas.snapshotItem(i)
-		element.parentNode.removeChild(element)
-	}
-
-	for (var i = 0, il = divs.snapshotLength; i < il; i++) {
-		element = divs.snapshotItem(i)
-		element.parentNode.removeChild(element)
-	}
-
-	for (var i = 0, il = commentforms.length; i < il; i++) {
-		element = commentforms[i]
-		element.parentNode.removeChild(element)
-	}
+    if (3 === canvases.length) {
+      element = canvases[1]
+      element.parentNode.removeChild(element)
+    }
+  }
 }
 
-var observer	= new MutationObserver(removeComments)
+var observer  = new MutationObserver(removeComments)
 observer.observe(document, { childList : true, subtree : true })
 removeComments()
 
