@@ -176,7 +176,7 @@ class Editor
 
     html = html.replace(/<!--.+-->/, '').trim()
     html = "<blockquote><p><strong><a href='/users/#{userId}'>#{username}</a></strong>" +
-           "&nbsp;<a href='#posts-#{postId}'>wrote</a>:</p>#{html}</blockquote>"
+           "&nbsp;<a href='#{location.pathname + location.search}#posts-#{postId}'>wrote</a>:</p>#{html}</blockquote>"
 
     html = modify html if modify
     @textarea.value = htmlToMarkdown html
