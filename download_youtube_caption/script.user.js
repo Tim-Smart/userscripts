@@ -93,7 +93,7 @@ function loadCaption (selector) {
 
         textarea = null;
 
-        GM_openInTab("data:text/plain;charset=utf-8," + encodeURIComponent(srt_output));
+        GM_openInTab("data:text/srt;charset=utf-8," + encodeURIComponent(srt_output));
       } else {
         alert("Error: No response from server.");
       }
