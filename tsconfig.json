@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "lib": ["ESNext", "DOM"],
+    "strict": true,
+    "alwaysStrict": false,
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+
+  "include": ["**/*.user.ts"],
+  "exclude": ["node_modules/**/*"]
+}
