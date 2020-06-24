@@ -31,55 +31,55 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-;(function () {
+(function () {
+  // For multiple environments.
+  var unsafe = unsafeWindow || window;
+  // Find a MutationObserver constructor.
+  var MutationObserver = unsafe.MutationObserver;
 
-// For multiple environments.
-var unsafe    = unsafeWindow || window
-// Find a MutationObserver constructor.
-var MutationObserver  = unsafe.MutationObserver
-
-if (!MutationObserver && unsafe.WebKitMutationObserver) {
-  MutationObserver = unsafe.WebKitMutationObserver
-}
-
-// ====
-// Remove comments when found
-
-function removeComments () {
-  var commentBubbles      = document.querySelectorAll('div.commentBubble')
-  var commentPlaceholders = document.querySelectorAll('div.commentPlaceholder')
-  var commentForms        = document.querySelectorAll('div.commentForm')
-  var wrappers            = document.querySelectorAll('div.waveform__scene')
-  var canvases            = null
-  var element             = null
-
-  for (var i = 0, il = commentBubbles.length; i < il; i++) {
-    element = commentBubbles[i]
-    element.parentNode.removeChild(element)
+  if (!MutationObserver && unsafe.WebKitMutationObserver) {
+    MutationObserver = unsafe.WebKitMutationObserver;
   }
-  for (var i = 0, il = commentPlaceholders.length; i < il; i++) {
-    element = commentPlaceholders[i]
-    element.parentNode.removeChild(element)
-  }
-  for (var i = 0, il = commentForms.length; i < il; i++) {
-    element = commentForms[i]
-    element.parentNode.removeChild(element)
-  }
-  for (var i = 0, il = wrappers.length; i < il; i++) {
-    element  = wrappers[i]
-    canvases = element.querySelectorAll('canvas')
 
-    if (3 === canvases.length) {
-      element = canvases[1]
-      element.parentNode.removeChild(element)
+  // ====
+  // Remove comments when found
+
+  function removeComments() {
+    var commentBubbles = document.querySelectorAll("div.commentBubble");
+    var commentPlaceholders = document.querySelectorAll(
+      "div.commentPlaceholder",
+    );
+    var commentForms = document.querySelectorAll("div.commentForm");
+    var wrappers = document.querySelectorAll("div.waveform__scene");
+    var canvases = null;
+    var element = null;
+
+    for (var i = 0, il = commentBubbles.length; i < il; i++) {
+      element = commentBubbles[i];
+      element.parentNode.removeChild(element);
+    }
+    for (var i = 0, il = commentPlaceholders.length; i < il; i++) {
+      element = commentPlaceholders[i];
+      element.parentNode.removeChild(element);
+    }
+    for (var i = 0, il = commentForms.length; i < il; i++) {
+      element = commentForms[i];
+      element.parentNode.removeChild(element);
+    }
+    for (var i = 0, il = wrappers.length; i < il; i++) {
+      element = wrappers[i];
+      canvases = element.querySelectorAll("canvas");
+
+      if (3 === canvases.length) {
+        element = canvases[1];
+        element.parentNode.removeChild(element);
+      }
     }
   }
-}
 
-var observer  = new MutationObserver(removeComments)
-observer.observe(document, { childList : true, subtree : true })
-removeComments()
-
+  var observer = new MutationObserver(removeComments);
+  observer.observe(document, { childList: true, subtree: true });
+  removeComments();
 })();
 
 /* vim: set expandtab sts=2 ts=2 sw=2 tw=80 ft=javascript :*/

@@ -15,10 +15,10 @@
 // publish, distribute, sublicense, and/or sell copies of the Software, and
 // to permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included
 // in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -27,68 +27,65 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-;(function () {
+(function () {
+  var LINKS = {
+    "New Script": "/scripts/new",
+    "Manage Scripts": "/home/scripts",
+    Favorites: "/home/favorites",
+    Comments: "/home/comments",
+    Topics: "/home/posts",
+    Settings: "/home/settings",
+  };
 
-var LINKS =
-  { 'New Script'     : '/scripts/new'
-  , 'Manage Scripts' : '/home/scripts'
-  , 'Favorites'      : '/home/favorites'
-  , 'Comments'       : '/home/comments'
-  , 'Topics'         : '/home/posts'
-  , 'Settings'       : '/home/settings'
+  /**
+   * Creates a <li> with a link.
+   *
+   * @param {String} name
+   * @param {String} path
+   * @return {HtmlElement}
+   */
+  function createLink(name, path) {
+    var li = document.createElement("li"),
+      a = document.createElement("a");
+
+    a.setAttribute("style", "font-weight: normal;");
+    a.setAttribute("href", path);
+    a.textContent = name;
+
+    li.appendChild(a);
+
+    return li;
   }
 
-/**
- * Creates a <li> with a link.
- *
- * @param {String} name
- * @param {String} path
- * @return {HtmlElement}
- */
-function createLink (name, path) {
-  var li = document.createElement('li')
-    , a  = document.createElement('a')
+  // Check for the /home link
+  var home = document.evaluate(
+    './/ul[@class="login_status"]/li/a[@href="/home"]',
+    document,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    null,
+  ).singleNodeValue;
 
-  a.setAttribute('style', 'font-weight: normal;')
-  a.setAttribute('href', path)
-  a.textContent = name
+  var first = true;
+  var name = null;
+  var link = null;
 
-  li.appendChild(a)
-
-  return li
-}
-
-// Check for the /home link
-var home = document.evaluate(
-  './/ul[@class="login_status"]/li/a[@href="/home"]'
-, document
-, null
-, XPathResult.FIRST_ORDERED_NODE_TYPE
-, null
-)
-  .singleNodeValue
-
-var first = true
-var name  = null
-var link  = null
-
-// The user is not logged in
-if (!home) {
-  return
-}
-
-home = home.parentNode
-
-// Logged in, and ready for awesome.
-for (name in LINKS) {
-  link = createLink(name, LINKS[name])
-  if (first === false) {
-    link.style.marginLeft = '0.5em'
+  // The user is not logged in
+  if (!home) {
+    return;
   }
-  first = false
 
-  home.parentNode.insertBefore(link, home.nextSibling)
-  home = link
-}
+  home = home.parentNode;
 
+  // Logged in, and ready for awesome.
+  for (name in LINKS) {
+    link = createLink(name, LINKS[name]);
+    if (first === false) {
+      link.style.marginLeft = "0.5em";
+    }
+    first = false;
+
+    home.parentNode.insertBefore(link, home.nextSibling);
+    home = link;
+  }
 })();

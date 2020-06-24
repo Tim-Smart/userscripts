@@ -7,76 +7,77 @@
 // @require        http://userscripts.org/scripts/source/56812.user.js
 // ==/UserScript==
 
-var api   = new USO.Gmail()
-  , older = null
+var api = new USO.Gmail(),
+  older = null;
 
-api.on('view:cv', function () {
-  var view = this.view
-    , buttons, button
+api.on("view:cv", function () {
+  var view = this.view,
+    buttons,
+    button;
 
-  older = view.ownerDocument.evaluate
-  ( ".//span[contains(., 'Older') and @role='link']"
-  , view
-  , null
-  , XPathResult.FIRST_ORDERED_NODE_TYPE
-  , null
-  )
-  .singleNodeValue
+  older = view.ownerDocument.evaluate(
+    ".//span[contains(., 'Older') and @role='link']",
+    view,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    null,
+  ).singleNodeValue;
 
   if (!older) {
-    return
+    return;
   }
 
-  buttons = view.ownerDocument.evaluate
-  ( ".//div[(contains(., 'Archive') or contains(., 'Delete')) and @role='button']"
-  , view
-  , null
-  , XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE
-  , null
-  )
+  buttons = view.ownerDocument.evaluate(
+    ".//div[(contains(., 'Archive') or contains(., 'Delete')) and @role='button']",
+    view,
+    null,
+    XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+    null,
+  );
 
   if (4 !== buttons.length) {
-    return
+    return;
   }
 
   for (var i = 0; i < buttons.snapshotLength; i++) {
-    button = buttons.snapshotItem(i)
-    button.addEventListener
-    ( 'mouseup', function () {
+    button = buttons.snapshotItem(i);
+    button.addEventListener(
+      "mouseup",
+      function () {
         if (!older) {
-          return
+          return;
         }
-        api.click(older)
-      }
-    , false
-    )
+        api.click(older);
+      },
+      false,
+    );
   }
-})
+});
 
-api.on('loaded', function () {
-  this
-    .canvas
-    .ownerDocument
-    .addEventListener
-    ( 'keydown', function (event) {
-        if (!older) {
-          return
-        }
+api.on("loaded", function () {
+  this.canvas.ownerDocument.addEventListener(
+    "keydown",
+    function (event) {
+      if (!older) {
+        return;
+      }
 
-        switch (event.keyCode) {
+      switch (event.keyCode) {
         case 69:
-          break
+          break;
         case 51:
           if (!event.shiftKey) {
-            return
+            return;
           }
-          break
+          break;
         default:
-          return
-        }
-
-        setTimeout(function () { api.click(older) }, 0)
+          return;
       }
-    , false
-    )
-})
+
+      setTimeout(function () {
+        api.click(older);
+      }, 0);
+    },
+    false,
+  );
+});

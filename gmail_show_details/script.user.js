@@ -8,22 +8,21 @@
 // ==/UserScript==
 
 // Initialise the GMailAPI
-var api = new USO.Gmail()
+var api = new USO.Gmail();
 
-api.on('view:cv', function () {
-  var view  = this.view
+api.on("view:cv", function () {
+  var view = this.view;
   var links = view.ownerDocument.evaluate(
-        './/span[contains(., "show details")]'
-      , view
-      , null
-      , XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE
-      , null
-      )
-  var link  = null
+    './/span[contains(., "show details")]',
+    view,
+    null,
+    XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+    null,
+  );
+  var link = null;
 
-  for (var i = 0; i < links.snapshotLength; i++) { 
-    link = links.snapshotItem(i)
-    this.click(link)
+  for (var i = 0; i < links.snapshotLength; i++) {
+    link = links.snapshotItem(i);
+    this.click(link);
   }
-})
-
+});

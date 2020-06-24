@@ -6,20 +6,19 @@
 // @require        http://userscripts.org/scripts/source/56812.user.js
 // ==/UserScript==
 
-var api = new USO.Gmail()
+var api = new USO.Gmail();
 
-api.on('view:cv', function () {
-  var view = this.view
-    , span = view.ownerDocument.evaluate
-      ( ".//span[contains(., 'Always display images from ')]"
-      , view
-      , null
-      , XPathResult.FIRST_ORDERED_NODE_TYPE
-      , null
-      )
-      .singleNodeValue
+api.on("view:cv", function () {
+  var view = this.view,
+    span = view.ownerDocument.evaluate(
+      ".//span[contains(., 'Always display images from ')]",
+      view,
+      null,
+      XPathResult.FIRST_ORDERED_NODE_TYPE,
+      null,
+    ).singleNodeValue;
 
   if (span) {
-    api.click(span)
+    api.click(span);
   }
-})
+});
