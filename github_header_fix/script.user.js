@@ -24,7 +24,7 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function () {
-  const head = document.querySelector(".pagehead");
+  const head = document.querySelector(".repohead");
   if (!head) return;
   const nav = head.querySelector(".UnderlineNav-body");
   if (!nav) return;
