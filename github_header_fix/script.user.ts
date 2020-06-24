@@ -29,7 +29,7 @@
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function () {
-  const head = document.querySelector(".pagehead");
+  const head = document.querySelector(".repohead");
   if (!head) return;
 
   const nav = head.querySelector<HTMLUListElement>(".UnderlineNav-body");
